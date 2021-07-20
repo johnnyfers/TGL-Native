@@ -1,6 +1,6 @@
 export const theme = {
     colors: {
-      primary: '#F7F7F7',
+      primary: '#F7F7F1',
       
       secondary10: '#B5C401',
       secondary20: '#707070',
@@ -10,8 +10,19 @@ export const theme = {
     },
   
     fonts: {
-      title700: 'Inter_700Bold',
-      text400: 'Inter_400Regular',
-      text500: 'Inter_500Medium',
+      title700: 'HelveticaNeue-BoldItalic',
+      text400: 'HelveticaNeue-LightItalic',
+      text500: 'HelveticaNeue-MediumItalic',
     }
   };
+
+
+
+/* import {StyleSheet} from 'react-native'
+import { theme } from '../../global/theme'
+
+export const styles = StyleSheet.create({
+    container: {
+        
+    }
+}) */
