@@ -18,7 +18,7 @@ export function AuthRoutes() {
                 }
             }}
         >
-            <Screen name="NewBet" component={BetsRoutes}/>
+            <Screen name="TGL" component={BetsRoutes}/>
             <Screen
                 name="SignIn"
                 component={SignIn}

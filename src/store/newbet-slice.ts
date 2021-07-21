@@ -4,12 +4,14 @@ type ItemsType = {
     items: number[]
     price: number
     type: string
+    isNewBet: boolean
 }
 
 const initialState: ItemsType = {
     items: [],
     price: 0,
-    type: ''
+    type: '',
+    isNewBet: false
 }
 
 const newbetSlice = createSlice({
@@ -57,6 +59,12 @@ const newbetSlice = createSlice({
             }
 
             console.log(state.items.map((element) => element))
+        },
+        defineBetPage(state){
+            state.isNewBet = true
+        },
+        undefineBetPage(state){
+            state.isNewBet = false
         }
     }
 })
