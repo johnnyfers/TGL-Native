@@ -28,7 +28,9 @@ export default function BetsHeader() {
                     />
                 </RectButton>
                 
-                <RectButton>
+                <RectButton
+                    onPress={() => navigation.navigate('SignIn')}
+                >
                     <MaterialIcons
                         name="logout"
                         size={30}
