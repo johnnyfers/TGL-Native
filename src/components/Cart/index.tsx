@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { cartActions } from '../../store/cart-slice'
 
 import { gamesActions } from '../../store/games-slice'
+import { GameCard } from '../GameCard'
 
 
 type RootState = {
@@ -80,16 +81,24 @@ export function Cart() {
 
                 <View>
                     <ScrollView style={styles.scroll}>
-                    {cartItem.map((item: {
-                    game_id: number
-                    idKey: string
-                    numbers: number[] | string
-                    total_price: number
-                    type: string
-                    color: string
-                }) =>
-                    <Text>{item.total_price}</Text>)
-                }
+                        {cartItem.map((item: {
+                            game_id: number
+                            idKey: string
+                            numbers: number[] | string
+                            total_price: number
+                            type: string
+                            color: string
+                        }) =>
+                            <GameCard 
+                                key={item.idKey}
+                                type={item.type}
+                                price={item.total_price}
+                                color={item.color}
+                                numbers={item.numbers}
+                                date={'12/12/2000'}
+                                deleteRow={(): void => deleteRow(item.idKey, item.total_price)}
+                            />)
+                        }
                     </ScrollView>
                 </View>
 
@@ -116,7 +125,6 @@ export function Cart() {
                     color={theme.colors.secondary10}
                 />
             </RectButton>
-
         </View>
     )
 }
