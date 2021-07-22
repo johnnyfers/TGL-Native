@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native'
 import { theme } from '../../global/theme'
+import { Background } from '../Background'
 
 export const styles = StyleSheet.create({
     container: {
@@ -9,7 +10,7 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 20,
+        paddingHorizontal: -30,
     },
     title: {
         fontSize: 30,

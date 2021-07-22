@@ -4,10 +4,8 @@ import Account from '../screens/Account';
 import { Games } from '../screens/Games';
 import { SimpleLineIcons, Feather } from '@expo/vector-icons';
 import { NewBet } from '../screens/NewBet';
-import { View, StyleSheet, Image } from 'react-native';
 import { theme } from '../global/theme';
 import BetsHeader from '../components/BetsHeader';
-import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { IconTabBet } from '../components/IconTabBet';
 
@@ -22,7 +20,6 @@ export function BetsRoutes() {
 
     return (
         <>
-            <BetsHeader />
             <Navigator
                 initialRouteName="NewBet"
                 activeColor={theme.colors.secondary10}

@@ -10,12 +10,14 @@ type ItemsType = {
         color: string
         date_string: string
     }[],
-    totalPrice: number
+    totalPrice: number,
+    displayCart: boolean
 }
 
 const initialState: ItemsType = {
     cartItem: [],
-    totalPrice: 0
+    totalPrice: 0,
+    displayCart: false
 }
 
 const cartSlice = createSlice({
@@ -59,6 +61,14 @@ const cartSlice = createSlice({
         clearCart(state) {
             state.totalPrice = 0
             state.cartItem = []
+        },
+
+        showCart(state){
+            state.displayCart = true
+        },
+
+        closeCart(state){
+            state.displayCart = false
         }
     }
 })

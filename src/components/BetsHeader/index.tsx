@@ -1,14 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text } from 'react-native'
 import { styles } from './style'
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { theme } from '../../global/theme';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { cartActions } from '../../store/cart-slice';
 
-export default function BetsHeader() {
+type Props = {
+    isNewBet?: boolean
+}
+
+export default function BetsHeader({ isNewBet }: Props) {
     const navigation = useNavigation()
-    
+    const dispatch = useDispatch()
+
+    function showCart() {
+        dispatch(cartActions.showCart())
+    }
+
     return (
         <View style={styles.container}>
             <View>
@@ -17,17 +28,16 @@ export default function BetsHeader() {
             </View>
 
             <View style={styles.cartContainer}>
-                <RectButton
-                    onPress={() => navigation.navigate('Games')}
-                >
+                {isNewBet &&
                     <Ionicons
+                        onPress={showCart}
                         style={styles.icon}
                         name="cart-outline"
                         size={30}
                         color={theme.colors.secondary10}
                     />
-                </RectButton>
-                
+                }
+
                 <RectButton
                     onPress={() => navigation.navigate('SignIn')}
                 >

@@ -5,8 +5,7 @@ import { theme } from '../../global/theme'
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 20,
-        paddingHorizontal: 30
+        paddingHorizontal: 30,
     },
     buttonsContainer: {
         alignSelf: 'center',
@@ -64,5 +63,14 @@ export const styles = StyleSheet.create({
         top: 7,
         right: 6,
         fontFamily: theme.fonts.title700
+    },
+    message: {
+        fontFamily: theme.fonts.title700,
+        color: theme.colors.secondary20
+    },
+    icon: {
+        position: 'absolute',
+        bottom: 650,
+        left: 50
     }
 })
