@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
+import { Ionicons } from '@expo/vector-icons';
 
 import { SelectGameButton } from '../../components/SelectGameButton'
 import { theme } from '../../global/theme'
@@ -9,6 +10,7 @@ import { newbetActions } from '../../store/newbet-slice'
 import { styles } from './style'
 import { ItemTypes } from '../../interfaces/ItemTypes'
 import { RectButton } from 'react-native-gesture-handler'
+import { ManageBetButton } from '../../components/ManageBetButton'
 
 let myArray: any[] = []
 
@@ -61,6 +63,15 @@ export function NewBet() {
     function clearGame() {
         dispatch(newbetActions.clearGame())
     }
+
+    const completeGame = (maxNumber: number, range: number) => {
+        if (myItems.length === maxNumber) {
+            clearGame()
+            dispatch(newbetActions.completeGame({ maxNumber, range }))
+        }
+        dispatch(newbetActions.completeGame({ maxNumber, range }))
+    }
+
     useEffect(() => {
         if (items.length) {
             gameHandler(0)
@@ -75,6 +86,7 @@ export function NewBet() {
         gameColor: string
     ) {
         dispatch(newbetActions.addItemToArray({ value, maxNumber, gamePrice, gameName }))
+
     }
 
     function draggerHandler() {
@@ -126,7 +138,48 @@ export function NewBet() {
                 </View>
             }
             {showBetButtons &&
-                <Text>Teste</Text>
+
+                <View>
+                    <ScrollView style={{ flexDirection: 'row', marginVertical: 10 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            {myItems &&
+                                myItems.map((value: number) =>
+                                    <RectButton
+                                        onPress={() => selectButtonHandler(value, gameMaxNumber, gamePrice, gameName, gameColor)}
+                                        style={{ ...styles.buttonsGameInsideScroll, backgroundColor: gameColor }}>
+                                        <View style={{ ...styles.buttonsGameInsideScroll, backgroundColor: gameColor }}>
+                                            <Text style={{ ...styles.gameText, fontSize: 13 }}>{value}</Text>
+                                            <Text style={styles.close}>X</Text>
+                                        </View>
+                                    </RectButton>
+                                )
+                            }
+                        </View>
+                    </ScrollView>
+                    <View style={{ flexDirection: 'row' }}>
+                        <ManageBetButton
+                            callback={() => completeGame(gameMaxNumber, gameRange)}
+                            backgroundColor='transparent'
+                            color={theme.colors.secondary10}
+                            title='Complete game' />
+                        <ManageBetButton
+                            callback={clearGame}
+                            backgroundColor='transparent'
+                            color={theme.colors.secondary10}
+                            title='Clear game' />
+                        <ManageBetButton
+                            backgroundColor={theme.colors.secondary10}
+                            color='#fff'
+                            title='Add to cart'
+                        >
+                            <Ionicons
+                                name="cart-outline"
+                                size={24}
+                                color={theme.colors.primary}
+                            />
+                        </ManageBetButton>
+                    </View>
+                </View>
             }
 
             <RectButton

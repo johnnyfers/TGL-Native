@@ -34,7 +34,15 @@ export const styles = StyleSheet.create({
         width: 59,
         height: 59,
         borderRadius: 100,
-        backgroundColor: theme.colors.secondary30
+    },
+    buttonsGameInsideScroll:{
+        position: 'relative',
+        margin: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 40,
+        height: 40,
+        borderRadius: 100,
     },
     gameText: {
         fontSize: 18,
@@ -48,5 +56,13 @@ export const styles = StyleSheet.create({
         theme.colors.secondary30, 
         alignSelf: 'center', 
         borderRadius: 20,
+    },
+    close:{
+        color: '#fff',
+        fontSize:9,
+        position: 'absolute',
+        top: 7,
+        right: 6,
+        fontFamily: theme.fonts.title700
     }
 })

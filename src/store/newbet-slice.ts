@@ -31,11 +31,9 @@ const newbetSlice = createSlice({
 
             if (!existingItem && state.items.length < maxNumber) {
                 state.items.push(newItem)
-                console.log(state.items.map((element) => element))
             }
             if (existingItem) {
                 state.items.splice( state.items.indexOf(newItem), 1)
-                console.log(state.items.map((element) => element))
             }
         },
 
