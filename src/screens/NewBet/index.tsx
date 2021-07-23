@@ -14,7 +14,7 @@ import BetButtonContainer from '../../components/BetButtonContainer';
 import { cartActions } from '../../store/cart-slice';
 import BetsHeader from '../../components/BetsHeader';
 import { Cart } from '../../components/Cart';
-import ErrorModal from '../../components/Modal';
+import { Modal } from '../../components/Modal';
 
 let myArray: any[] = []
 
@@ -35,7 +35,9 @@ export function NewBet() {
 
     const dispatch = useDispatch()
 
-    const [errorMessage, setErrorMessage] = useState('')
+    const [modalColor, setModalColor] = useState('')
+    const [modalTitle, setModalTitle] = useState('')
+    const [message, setmessage] = useState('')
     const [showAlert, setShowAlert] = useState(false)
 
     const [gameDescription, setGameDescription] = useState('')
@@ -83,7 +85,7 @@ export function NewBet() {
 
     const addToCart = (numbersGame: number[], gamePrice: number, gameName: string, color: string, maxNumber: number, gameId: number) => {
         if (numbersGame.length !== maxNumber) {
-            return displayAlert(`Choose more ${gameMaxNumber - myItems.length} numbers to complete your bet`)
+            return displayAlert(`Choose more ${gameMaxNumber - myItems.length} numbers to complete your bet`, 'Error :(', 'red')
         }
 
         dispatch(cartActions.receiveDataFromNewBEt({ numbersGame, gamePrice, gameName, color, gameId }))
@@ -108,9 +110,12 @@ export function NewBet() {
 
     }
 
-    function displayAlert(message: string) {
+    function displayAlert(message: string, title: string, color: string) {
+        setModalTitle(title)
+        setModalColor(color)
+        setmessage(message)
+
         setShowAlert(true)
-        setErrorMessage(message)
     }
 
     function hideAlert() {
@@ -143,7 +148,7 @@ export function NewBet() {
 
     return (
         <>
-            <View style={{...styles.container, opacity: displayCart ? 0.3: 1}}>
+            <View style={{ ...styles.container, opacity: displayCart ? 0.3 : 1 }}>
                 <BetsHeader isNewBet={true} />
                 <Text style={styles.title}>
                     NEW BET FOR {gameName.toLocaleUpperCase()}
@@ -186,7 +191,7 @@ export function NewBet() {
                                 }
                                 {myItems.length === 0 &&
                                     <Text style={styles.message}>
-                                        Click in the buttons to play 
+                                        Click in the buttons to play
                                         <MaterialCommunityIcons name="gesture-tap" size={24} color={gameColor} />
                                     </Text>
                                 }
@@ -215,12 +220,12 @@ export function NewBet() {
             {displayCart &&
                 <Cart />
             }
-            <ErrorModal
-                 title="Error :("
-                 color={'red'}
+            <Modal
+                title={modalTitle}
+                color={modalColor}
                 showAlert={showAlert}
-                hideAlert={hideAlert}
-                message={errorMessage}
+                callback={hideAlert}
+                message={message}
             />
         </>
     )

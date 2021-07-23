@@ -28,14 +28,14 @@ export function Reset() {
         axios.post('http://192.168.0.104:8000/reset', {
             email: inputEmail,
         })
-            .then((res) => {
+            .then(() => {
                 return displayAlert(
                     'Click in OK to reset your passowrd using the token that was sent through your email',
                     'Success :)',
                     'red',
                     false)
             })
-            .catch(err => {
+            .catch(() => {
                 return displayAlert('Email already exists', 'Error :(', 'red', true)
             })
     }

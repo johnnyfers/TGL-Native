@@ -13,9 +13,9 @@ type Props = RectButtonProps & {
 
 export function SelectGameButton({ item, index, onPress, selectcolor, selectbackground }: Props) {
     return (
-        <RectButton onPress={onPress}>
-            <View style={{ ...styles.buttons, borderColor: item.color , backgroundColor: selectbackground }}>
-                <Text style={{ ...styles.title, color: selectcolor}} key={index}>{item.type}</Text>
+        <RectButton activeOpacity={0} onPress={onPress}>
+            <View key={index} style={{ ...styles.buttons, borderColor: item.color , backgroundColor: selectbackground }}>
+                <Text style={{ ...styles.title, color: selectcolor}} >{item.type}</Text>
             </View>
         </RectButton>
     )

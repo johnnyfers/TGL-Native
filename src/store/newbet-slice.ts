@@ -55,8 +55,6 @@ const newbetSlice = createSlice({
                     state.items.push(newItem)
                 }
             }
-
-            console.log(state.items.map((element) => element))
         },
         defineBetPage(state){
             state.isNewBet = true

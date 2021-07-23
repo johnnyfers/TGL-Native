@@ -30,5 +30,22 @@ export const styles = StyleSheet.create({
     },
     icon: {
         marginRight: 30,
+    },
+    badge: {
+        position: 'absolute',
+        top: -5,
+        left: 20,
+        width: 20,
+        height: 20,
+        backgroundColor: theme.colors.secondary10,
+        borderRadius: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 2
+    },
+    badgeText: {
+        fontSize: 12,
+        fontFamily: theme.fonts.title700,
+        color: theme.colors.primary
     }
 }) 

@@ -26,8 +26,6 @@ const gamesSlice = createSlice({
             const gamesFiltered: {}[] = action.payload.games
             const gameType: string = action.payload.gameType
 
-            console.log(gamesFiltered)
-
             state.cartItemFiltered = gamesFiltered.filter((games: any) => games.games.type === gameType)
         },
 

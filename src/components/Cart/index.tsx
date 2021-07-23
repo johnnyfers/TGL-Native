@@ -29,8 +29,13 @@ type RootState = {
 }
 
 export function Cart() {
+    let date = new Date();
+    let dateString = date.getDate() + "/0" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    
     const dispatch = useDispatch()
 
+    const [modalColor, setModalColor] = useState('')
+    const [modalTitle, setModalTitle] = useState('')
     const [message, setmessage] = useState('')
     const [showAlert, setShowAlert] = useState(false)
 
@@ -60,12 +65,13 @@ export function Cart() {
         };
 
         if (totalPrice < 30) {
-            displayAlert('you need a minimal value of R$30,00 to save your bets')
+            displayAlert(
+                'you need a minimal value of R$30,00 to save your bets',
+                'Error :(',
+                'red'
+            )
             return
         }
-
-        dispatch(gamesActions.receiveDataFromCart({ game }))
-        dispatch(cartActions.clearCart())
 
         axios.post(
             'http://192.168.0.104:8000/bets', {
@@ -73,14 +79,31 @@ export function Cart() {
         },
             config
         )
-            .catch((err) => displayAlert(err.message))
+            .then(() => {
+                return displayAlert(
+                    'Your game was saved!!!',
+                    'Success :)',
+                    theme.colors.secondary10
+                )
+            })
+            .catch((err) => {
+                return displayAlert(
+                    'you need a minimal value of R$30,00 to save your bets',
+                    'Error :(',
+                    'red'
+                )
+            })
 
-        console.log('jogo salvo')
+        dispatch(gamesActions.receiveDataFromCart({ game }))
+        dispatch(cartActions.clearCart())
     }
 
-    function displayAlert(message: string) {
-        setShowAlert(true)
+    function displayAlert(message: string, title: string, color: string) {
+        setModalTitle(title)
+        setModalColor(color)
         setmessage(message)
+
+        setShowAlert(true)
     }
 
     function hideAlert() {
@@ -121,7 +144,7 @@ export function Cart() {
                                 price={item.total_price}
                                 color={item.color}
                                 numbers={item.numbers}
-                                date={'12/12/2000'}
+                                date={dateString}
                                 deleteRow={(): void => deleteRow(item.idKey, item.total_price)}
                             />)
                         }
@@ -152,8 +175,8 @@ export function Cart() {
                 />
             </RectButton>
             <Modal
-                title="Error :("
-                color={'red'}
+                title={modalTitle}
+                color={modalColor}
                 showAlert={showAlert}
                 callback={hideAlert}
                 message={message}

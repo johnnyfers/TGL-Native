@@ -43,8 +43,6 @@ export function SignIn() {
             .catch(async (err) => {
                 displayAlert()
                 await AsyncStorage.setItem('@token', '')
-
-                console.log('EROOOOZX|ZX|SDS')
             })
     }
 
