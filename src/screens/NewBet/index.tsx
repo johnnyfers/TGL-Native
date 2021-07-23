@@ -14,6 +14,7 @@ import BetButtonContainer from '../../components/BetButtonContainer';
 import { cartActions } from '../../store/cart-slice';
 import BetsHeader from '../../components/BetsHeader';
 import { Cart } from '../../components/Cart';
+import ErrorModal from '../../components/Modal';
 
 let myArray: any[] = []
 
@@ -33,6 +34,9 @@ export function NewBet() {
     let displayCart: boolean = useSelector((state: RootState) => state.cart.displayCart)
 
     const dispatch = useDispatch()
+
+    const [errorMessage, setErrorMessage] = useState('')
+    const [showAlert, setShowAlert] = useState(false)
 
     const [gameDescription, setGameDescription] = useState('')
     const [gameName, setGameName] = useState('')
@@ -79,7 +83,7 @@ export function NewBet() {
 
     const addToCart = (numbersGame: number[], gamePrice: number, gameName: string, color: string, maxNumber: number, gameId: number) => {
         if (numbersGame.length !== maxNumber) {
-            return console.log('Preencha todos os numeros referentes ao jogo')
+            return displayAlert(`Choose more ${gameMaxNumber - myItems.length} numbers to complete your bet`)
         }
 
         dispatch(cartActions.receiveDataFromNewBEt({ numbersGame, gamePrice, gameName, color, gameId }))
@@ -99,10 +103,18 @@ export function NewBet() {
         maxNumber: number,
         gamePrice: number,
         gameName: string,
-        gameColor: string
     ) {
         dispatch(newbetActions.addItemToArray({ value, maxNumber, gamePrice, gameName }))
 
+    }
+
+    function displayAlert(message: string) {
+        setShowAlert(true)
+        setErrorMessage(message)
+    }
+
+    function hideAlert() {
+        setShowAlert(false)
     }
 
     function draggerHandler() {
@@ -116,7 +128,7 @@ export function NewBet() {
             myArray.push(
                 <RectButton
                     style={styles.buttonsGame}
-                    onPress={() => selectButtonHandler(i, gameMaxNumber, gamePrice, gameName, gameColor)}
+                    onPress={() => selectButtonHandler(i, gameMaxNumber, gamePrice, gameName)}
                     key={i}
                 >
                     <View style={{ ...styles.buttonsGame, backgroundColor: myItems.find(item => item === i) ? gameColor : theme.colors.secondary30 }}>
@@ -163,7 +175,7 @@ export function NewBet() {
                                 {myItems &&
                                     myItems.map((value: number) =>
                                         <RectButton
-                                            onPress={() => selectButtonHandler(value, gameMaxNumber, gamePrice, gameName, gameColor)}
+                                            onPress={() => selectButtonHandler(value, gameMaxNumber, gamePrice, gameName)}
                                             style={{ ...styles.buttonsGameInsideScroll, backgroundColor: gameColor }}>
                                             <View style={{ ...styles.buttonsGameInsideScroll, backgroundColor: gameColor }}>
                                                 <Text style={{ ...styles.gameText, fontSize: 13 }}>{value}</Text>
@@ -174,7 +186,8 @@ export function NewBet() {
                                 }
                                 {myItems.length === 0 &&
                                     <Text style={styles.message}>
-                                        Click in the buttons to play <MaterialCommunityIcons name="gesture-tap" size={24} color={gameColor} />
+                                        Click in the buttons to play 
+                                        <MaterialCommunityIcons name="gesture-tap" size={24} color={gameColor} />
                                     </Text>
                                 }
                             </View>
@@ -202,6 +215,13 @@ export function NewBet() {
             {displayCart &&
                 <Cart />
             }
+            <ErrorModal
+                 title="Error :("
+                 color={'red'}
+                showAlert={showAlert}
+                hideAlert={hideAlert}
+                message={errorMessage}
+            />
         </>
     )
 }

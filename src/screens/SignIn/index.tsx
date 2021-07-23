@@ -8,13 +8,15 @@ import { AuthButtons } from '../../components/AuthButtons'
 import { AuthForm } from '../../components/AuthForm'
 import { AuthHeader } from '../../components/AuthHeader'
 import { AuthTitle } from '../../components/AuthTitle'
+import { Modal } from '../../components/Modal'
 import { InputAuthForm } from '../../components/InputAuthForm'
 import { theme } from '../../global/theme'
 import { styles } from './styles'
 
 export function SignIn() {
     const navigation = useNavigation()
-    
+
+    const [showAlert, setShowAlert] = useState(false)
     const [inputEmail, setInputEmail] = useState('')
     const [inputPassword, setInputPassword] = useState('')
 
@@ -28,22 +30,31 @@ export function SignIn() {
 
     function handleLogin() {
         axios.post('http://192.168.0.104:8000/sessions', {
-                password: inputPassword,
-                email: inputEmail,
+            password: inputPassword,
+            email: inputEmail,
+        })
+            .then(async (res) => {
+                await AsyncStorage.setItem('@token', res.data.token)
+
+                setTimeout(() => {
+                    navigation.navigate('TGL')
+                }, 2000)
             })
-                .then(async (res) => {
-                    await AsyncStorage.setItem('@token', res.data.token)
+            .catch(async (err) => {
+                displayAlert()
+                await AsyncStorage.setItem('@token', '')
 
-                    setTimeout(() => {
-                        navigation.navigate('TGL')
-                    }, 2000)
-                })
-                .catch(async (err) => {
-                    await AsyncStorage.setItem('@token', '')
-
-                    console.log('EROOOOZX|ZX|SDS')
-                })
+                console.log('EROOOOZX|ZX|SDS')
+            })
     }
+
+    const displayAlert = () => {
+        setShowAlert(true)
+    };
+
+    const hideAlert = () => {
+        setShowAlert(false)
+    };
 
     function handleReset() {
         navigation.navigate('Reset')
@@ -81,6 +92,13 @@ export function SignIn() {
                 isOutside={true}
                 color={theme.colors.secondary20}
                 title="Sign Up"
+            />
+            <Modal
+                title="Error :("
+                color={'red'}
+                showAlert={showAlert}
+                callback={hideAlert}
+                message="email or password are wrong"
             />
         </View>
     )

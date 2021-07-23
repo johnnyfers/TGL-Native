@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
 import { theme } from '../../global/theme'
@@ -10,7 +10,9 @@ import { cartActions } from '../../store/cart-slice'
 
 import { gamesActions } from '../../store/games-slice'
 import { GameCard } from '../GameCard'
-
+import { Modal } from '../Modal'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axios from 'axios'
 
 type RootState = {
     cart: {
@@ -26,9 +28,11 @@ type RootState = {
     }
 }
 
-
 export function Cart() {
     const dispatch = useDispatch()
+
+    const [message, setmessage] = useState('')
+    const [showAlert, setShowAlert] = useState(false)
 
     let cartItem: {
         game_id: number,
@@ -49,16 +53,38 @@ export function Cart() {
         dispatch(cartActions.deleteItemFromCart({ idKey, total_price }))
     }
 
-    const saveGame = (game: {}[]) => {
+    async function saveGame(game: {}[]) {
+        const token = await AsyncStorage.getItem('@token')
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
+
         if (totalPrice < 30) {
-            console.log('Jogo não salvo')
+            displayAlert('you need a minimal value of R$30,00 to save your bets')
             return
         }
 
         dispatch(gamesActions.receiveDataFromCart({ game }))
         dispatch(cartActions.clearCart())
 
+        axios.post(
+            'http://192.168.0.104:8000/bets', {
+            bets: game
+        },
+            config
+        )
+            .catch((err) => displayAlert(err.message))
+
         console.log('jogo salvo')
+    }
+
+    function displayAlert(message: string) {
+        setShowAlert(true)
+        setmessage(message)
+    }
+
+    function hideAlert() {
+        setShowAlert(false)
     }
 
     return (
@@ -89,7 +115,7 @@ export function Cart() {
                             type: string
                             color: string
                         }) =>
-                            <GameCard 
+                            <GameCard
                                 key={item.idKey}
                                 type={item.type}
                                 price={item.total_price}
@@ -115,7 +141,7 @@ export function Cart() {
                 </View>
             </View>
 
-            <RectButton style={styles.saveButton} onPress={(): void => saveGame(cartItem)}>
+            <RectButton style={styles.saveButton} onPress={(): Promise<void> => saveGame(cartItem)}>
                 <Text style={styles.saveButtonText}>
                     SAVE
                 </Text>
@@ -125,6 +151,13 @@ export function Cart() {
                     color={theme.colors.secondary10}
                 />
             </RectButton>
+            <Modal
+                title="Error :("
+                color={'red'}
+                showAlert={showAlert}
+                callback={hideAlert}
+                message={message}
+            />
         </View>
     )
 }
