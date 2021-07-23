@@ -17,9 +17,7 @@ export function Games() {
     async function getDate() {
         const user = await AsyncStorage.getItem('@token')
 
-        if (user) {
-            setToken(user)
-        }
+        setToken(user!)
     }
 
     const config = {
@@ -38,15 +36,14 @@ export function Games() {
             .catch(err => console.log(err.message))
 
         axios
-            .get('http://192.168.0.104:8000/bets?page=1&listNumber=10',
+            .get('http://192.168.0.104:8000/bets?page=1&listNumber=12',
                 config
             )
             .then(res => {
-                console.log('aaaa')
                 setGames(res.data.data)
             })
             .catch(err => console.log(err.message))
-    }, [])
+    }, [items])
 
     return (
         <View style={styles.container}>
