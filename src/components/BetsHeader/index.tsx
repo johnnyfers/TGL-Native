@@ -7,6 +7,7 @@ import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { cartActions } from '../../store/cart-slice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = {
     isNewBet?: boolean
@@ -15,6 +16,11 @@ type Props = {
 export default function BetsHeader({ isNewBet }: Props) {
     const navigation = useNavigation()
     const dispatch = useDispatch()
+
+    async function logoutHandler(){
+        await AsyncStorage.removeItem('@token')
+        navigation.navigate('SignIn')
+    }
 
     function showCart() {
         dispatch(cartActions.showCart())
@@ -39,7 +45,7 @@ export default function BetsHeader({ isNewBet }: Props) {
                 }
 
                 <RectButton
-                    onPress={() => navigation.navigate('SignIn')}
+                    onPress={logoutHandler}
                 >
                     <MaterialIcons
                         name="logout"

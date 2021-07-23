@@ -1,6 +1,8 @@
 import { useNavigation } from '@react-navigation/native'
-import React from 'react'
-import { View, Text } from 'react-native'
+import axios from 'axios'
+import React, { useState } from 'react'
+import { View } from 'react-native'
+
 import { AuthButtons } from '../../components/AuthButtons'
 import { AuthForm } from '../../components/AuthForm'
 import { AuthHeader } from '../../components/AuthHeader'
@@ -12,7 +14,22 @@ import { styles } from './styles'
 export function SignUp() {
     const navigation = useNavigation()
 
-    function handleSignUp() {
+    const [inputEmail, setInputEmail] = useState('')
+    const [inputPassword, setInputPassword] = useState('')
+    const [inputName, setInputName] = useState('')
+
+    function handleRegister() {
+        axios.post('http://192.168.0.104:8000/users', {
+            name: inputName,
+            password: inputPassword,
+            email: inputEmail,
+        })
+            .catch(err => {
+                return err
+            })
+    }
+
+    function handleBack() {
         navigation.goBack()
     }
     return (
@@ -20,18 +37,19 @@ export function SignUp() {
             <AuthHeader />
             <AuthTitle title={"Create Account"} />
             <AuthForm>
-                <InputAuthForm title="Name" />
-                <InputAuthForm title="Email" />
-                <InputAuthForm title="Password" />
-                
+                <InputAuthForm title="Name" onChangeText={setInputName} />
+                <InputAuthForm title="Email" onChangeText={setInputEmail} />
+                <InputAuthForm secureTextEntry={true} title="Password" onChangeText={setInputPassword} />
+
                 <AuthButtons
+                    onPress={handleRegister}
                     color={theme.colors.secondary10}
                     title="Register"
                 />
             </AuthForm>
 
             <AuthButtons
-                onPress={handleSignUp}
+                onPress={handleBack}
                 isOutside={true}
                 color={theme.colors.secondary20}
                 title="Back"

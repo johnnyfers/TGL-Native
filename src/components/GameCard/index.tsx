@@ -25,7 +25,6 @@ export function GameCard({ type, price, numbers, color, date, deleteRow }: Props
                 </View>
                 <Text style={{ ...styles.title, color: color }}>{type}</Text>
             </View>
-
         </View>
     )
 }

@@ -11,7 +11,6 @@ const { Navigator, Screen } = createStackNavigator()
 export function AuthRoutes() {
     return (
         <Navigator
-            initialRouteName="NewBet"
             headerMode="none"
             screenOptions={{
                 cardStyle: {
@@ -19,7 +18,6 @@ export function AuthRoutes() {
                 }
             }}
         >
-            <Screen name="TGL" component={BetsRoutes} />
             <Screen
                 name="SignIn"
                 component={SignIn}
@@ -32,6 +30,7 @@ export function AuthRoutes() {
                 name="Reset"
                 component={Reset}
             />
+             <Screen name="TGL" component={BetsRoutes} />
         </Navigator>
     )
 }

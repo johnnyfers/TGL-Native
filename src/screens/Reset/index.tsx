@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
-import React from 'react'
+import axios from 'axios'
+import React, { useState } from 'react'
 import { View, Text } from 'react-native'
 import { AuthButtons } from '../../components/AuthButtons'
 import { AuthForm } from '../../components/AuthForm'
@@ -12,7 +13,21 @@ import { styles } from './styles'
 export function Reset() {
     const navigation = useNavigation()
 
-    function handleSignUp() {
+    const [inputEmail, setInputEmail] = useState('')
+
+    function handleReset(){
+        axios.post('http://192.168.0.104:8000/reset', {
+                email: inputEmail,
+            })
+                .then((res) => {
+                    
+                })
+                .catch(err => {
+                    return err
+                })
+    }
+
+    function handleBack() {
         navigation.goBack()
     }
     return (
@@ -23,13 +38,14 @@ export function Reset() {
                 <InputAuthForm title="Email" />
                 
                 <AuthButtons
+                    onPress={handleReset}
                     color={theme.colors.secondary10}
                     title="Send Link"
                 />
             </AuthForm>
 
             <AuthButtons
-                onPress={handleSignUp}
+                onPress={handleBack}
                 isOutside={true}
                 color={theme.colors.secondary20}
                 title="Back"

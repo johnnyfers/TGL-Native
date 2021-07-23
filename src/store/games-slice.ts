@@ -18,9 +18,10 @@ const gamesSlice = createSlice({
     reducers: {
         receiveDataFromCart(state, action) {
             const game: {}[] = action.payload.game
+            const token: string = action.payload.token
 
             const config = {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                headers: { Authorization: `Bearer ${token}` }
             };
 
             axios.post(
