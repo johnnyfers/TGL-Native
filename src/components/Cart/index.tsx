@@ -1,18 +1,19 @@
 import React, { useState } from 'react'
+import LottieView from 'lottie-react-native';
 import { View, Text, ScrollView } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axios from 'axios'
+import * as Animatable from 'react-native-animatable';
+
 import { RectButton } from 'react-native-gesture-handler'
 import { theme } from '../../global/theme'
 import { styles } from './style'
-
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux'
 import { cartActions } from '../../store/cart-slice'
-
-import { gamesActions } from '../../store/games-slice'
 import { GameCard } from '../GameCard'
 import { Modal } from '../Modal'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import axios from 'axios'
+
 
 type RootState = {
     cart: {
@@ -31,7 +32,7 @@ type RootState = {
 export function Cart() {
     let date = new Date();
     let dateString = date.getDate() + "/0" + (date.getMonth() + 1) + "/" + date.getFullYear();
-    
+
     const dispatch = useDispatch()
 
     const [modalColor, setModalColor] = useState('')
@@ -80,22 +81,22 @@ export function Cart() {
             config
         )
             .then(() => {
-                return displayAlert(
+                displayAlert(
                     'Your game was saved!!!',
                     'Success :)',
                     theme.colors.secondary10
                 )
+                return dispatch(cartActions.clearCart())
+
             })
-            .catch((err) => {
-                return displayAlert(
+            .catch(() => {
+                displayAlert(
                     'you need a minimal value of R$30,00 to save your bets',
                     'Error :(',
                     'red'
                 )
+                return dispatch(cartActions.clearCart())
             })
-
-        dispatch(gamesActions.receiveDataFromCart({ game }))
-        dispatch(cartActions.clearCart())
     }
 
     function displayAlert(message: string, title: string, color: string) {
@@ -111,7 +112,10 @@ export function Cart() {
     }
 
     return (
-        <View style={styles.container}>
+        <Animatable.View
+            animation='bounceInRight'
+            duration={2000}
+            style={styles.container}>
             <View style={styles.card}>
                 <Ionicons
                     onPress={closeCart}
@@ -129,26 +133,49 @@ export function Cart() {
                 </View>
 
                 <View>
-                    <ScrollView style={styles.scroll}>
-                        {cartItem.map((item: {
-                            game_id: number
-                            idKey: string
-                            numbers: number[] | string
-                            total_price: number
-                            type: string
-                            color: string
-                        }) =>
-                            <GameCard
-                                key={item.idKey}
-                                type={item.type}
-                                price={item.total_price}
-                                color={item.color}
-                                numbers={item.numbers}
-                                date={dateString}
-                                deleteRow={(): void => deleteRow(item.idKey, item.total_price)}
-                            />)
-                        }
-                    </ScrollView>
+                    {totalPrice !== 0 &&
+                        <ScrollView style={styles.scroll}>
+                            {cartItem.map((item: {
+                                game_id: number
+                                idKey: string
+                                numbers: number[] | string
+                                total_price: number
+                                type: string
+                                color: string
+                            }) =>
+                                <GameCard
+                                    key={item.idKey}
+                                    type={item.type}
+                                    price={item.total_price}
+                                    color={item.color}
+                                    numbers={item.numbers}
+                                    date={dateString}
+                                    deleteRow={(): void => deleteRow(item.idKey, item.total_price)}
+                                />)
+                            }
+                        </ScrollView>
+                    }
+                    {totalPrice === 0 &&
+                        <Animatable.View
+                            animation='fadeInDown'
+                            duration={1000}
+                            style={{ ...styles.scroll, justifyContent: 'center' }}>
+                            <LottieView
+                                style={{
+                                    alignSelf: 'center',
+                                    width: 100,
+                                    height: 100,
+                                    backgroundColor: 'transparent',
+                                    marginBottom: 20,
+                                }}
+                                source={require('../../assets/empty.json')}
+                                resizeMode='contain'
+                                autoPlay
+                                autoSize
+                                loop />
+                            <Text style={{ ...styles.title, textAlign: 'center' }}>Empty Cart</Text>
+                        </Animatable.View>
+                    }
                 </View>
 
                 <View style={styles.total}>
@@ -181,6 +208,6 @@ export function Cart() {
                 callback={hideAlert}
                 message={message}
             />
-        </View>
+        </Animatable.View>
     )
 }

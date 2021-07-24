@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { View, Text } from 'react-native'
+import * as Animatable from 'react-native-animatable';
+
 import { styles } from './style'
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { theme } from '../../global/theme';

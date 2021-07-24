@@ -13,5 +13,11 @@ export const styles = StyleSheet.create({
         textAlign: 'right',
         margin: 30,
         marginBottom: 0
+    },
+    bounceImage: {
+        position: 'absolute',
+        alignSelf: 'center',
+        width: '100%',
+        height: 500,
     }
 })

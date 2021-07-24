@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import * as Animatable from 'react-native-animatable';
 
 import { SelectGameButton } from '../../components/SelectGameButton'
 import { theme } from '../../global/theme'
@@ -167,19 +168,25 @@ export function NewBet() {
                     )}
                 </View>
                 {!showBetButtons &&
-                    <View>
+                    <Animatable.View
+                        animation='bounceInRight'
+                        duration={800}
+                    >
                         <Text style={{ ...styles.title, fontSize: 18 }}>Fill your Bet</Text>
                         <Text style={{ ...styles.subtitle, fontFamily: theme.fonts.text500 }}>{gameDescription}</Text>
-                    </View>
+                    </Animatable.View>
                 }
                 {showBetButtons &&
-
-                    <View>
+                    <Animatable.View
+                        animation='bounceInLeft'
+                        duration={800}
+                    >
                         <ScrollView style={{ flexDirection: 'row', marginVertical: 10 }}>
                             <View style={{ flexDirection: 'row' }}>
                                 {myItems &&
                                     myItems.map((value: number) =>
                                         <RectButton
+                                            key={value}
                                             onPress={() => selectButtonHandler(value, gameMaxNumber, gamePrice, gameName)}
                                             style={{ ...styles.buttonsGameInsideScroll, backgroundColor: gameColor }}>
                                             <View style={{ ...styles.buttonsGameInsideScroll, backgroundColor: gameColor }}>
@@ -202,7 +209,7 @@ export function NewBet() {
                             clearGame={clearGame}
                             addToCart={() => addToCart(myItems, gamePrice, gameName, gameColor, gameMaxNumber, gameId)}
                         />
-                    </View>
+                    </Animatable.View>
                 }
 
                 <RectButton

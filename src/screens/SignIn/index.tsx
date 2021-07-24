@@ -2,7 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
+import * as Animatable from 'react-native-animatable';
 
 import { AuthButtons } from '../../components/AuthButtons'
 import { AuthForm } from '../../components/AuthForm'
@@ -13,6 +14,23 @@ import { InputAuthForm } from '../../components/InputAuthForm'
 import { theme } from '../../global/theme'
 import { styles } from './styles'
 import { LoadingPage } from '../../components/LoadingPage'
+
+const goUp = {
+    0: {
+        bottom: -400,
+    },
+    0.5: {
+        bottom: 150,
+    },
+    0.6:{},
+    0.7:{},
+    0.75: {
+        bottom: 750,
+    },
+    1: {
+        bottom: 2000,
+    },
+};
 
 export function SignIn() {
     const navigation = useNavigation()
@@ -75,6 +93,7 @@ export function SignIn() {
 
     return (
         <>
+
             {!isLoading &&
                 <View style={styles.container}>
                     <AuthHeader />
@@ -107,10 +126,18 @@ export function SignIn() {
                         callback={hideAlert}
                         message="email or password are wrong"
                     />
-                </View>}
+
+                </View>
+            }
             {isLoading &&
                 <LoadingPage />
             }
+            <Animatable.Image
+                animation={goUp}
+                duration={4000}
+                style={styles.bounceImage}
+                source={require('../../assets/adaptive.png')}
+            />
         </>
     )
 }

@@ -8,20 +8,8 @@ import { ItemTypes } from '../../interfaces/ItemTypes'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { SelectGameButton } from '../../components/SelectGameButton'
 import { GameCard } from '../../components/GameCard'
-import { useDispatch, useSelector } from 'react-redux'
-import { gamesActions } from '../../store/games-slice'
-
-interface RootState {
-    games: {
-        cartItemFiltered: {}[]
-    }
-}
-
 
 export function Games() {
-    const dispatch = useDispatch()
-    //const cartItemFiltered: {}[] = useSelector((state: RootState) => state.games.cartItemFiltered)
-
     const [gamesSelected, setGamesSelected] = useState([10])
 
     const [items, setItems] = useState([])
@@ -57,6 +45,7 @@ export function Games() {
                 .catch(err => console.log(err.message))
             return
         }
+
         setGamesFiltered(prev => prev = prev.filter((games: any) => games.games.id !== id))
         setGamesSelected((prev) => prev = prev.filter((item) => item !== id))
     }
@@ -98,12 +87,16 @@ export function Games() {
                         key={index}
                         item={item}
                         index={index}
-                    />
+                    >
+                        {(gamesSelected.find((id) => id === item.id)) &&
+                            <Text style={styles.close}>X</Text>
+                        }
+                    </SelectGameButton>
                 )}
             </View>
 
             <ScrollView>
-                {!gamesFiltered &&
+                {gamesFiltered.length === 0 &&
                     games.map((item: any, index: number) =>
                         <GameCard
                             key={index}

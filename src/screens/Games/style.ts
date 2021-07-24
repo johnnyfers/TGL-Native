@@ -23,5 +23,13 @@ export const styles = StyleSheet.create({
         alignSelf: 'center',
         flexDirection: 'row',
         marginBottom: 20
+    },
+    close:{
+        color: '#fff',
+        fontSize:10,
+        position: 'absolute',
+        top: 19,
+        right: 19,
+        fontFamily: theme.fonts.title700
     }
 })
