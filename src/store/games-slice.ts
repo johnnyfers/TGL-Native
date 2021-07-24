@@ -16,17 +16,11 @@ const gamesSlice = createSlice({
     name: 'games',
     initialState,
     reducers: {
-        receiveDataFromCart(state, action) {
-            const game: {}[] = action.payload.game
-
-            state.cartItem.push({ game })
-        },
-
         filterGames(state, action) {
             const gamesFiltered: {}[] = action.payload.games
-            const gameType: string = action.payload.gameType
+            const id: number = action.payload.id
 
-            state.cartItemFiltered = gamesFiltered.filter((games: any) => games.games.type === gameType)
+            state.cartItemFiltered = gamesFiltered.filter((games: any) => games.games.id === id)
         },
 
         clearFilter(state) {

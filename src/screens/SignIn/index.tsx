@@ -12,10 +12,12 @@ import { Modal } from '../../components/Modal'
 import { InputAuthForm } from '../../components/InputAuthForm'
 import { theme } from '../../global/theme'
 import { styles } from './styles'
+import { LoadingPage } from '../../components/LoadingPage'
 
 export function SignIn() {
     const navigation = useNavigation()
 
+    const [isLoading, setIsLoading] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
     const [inputEmail, setInputEmail] = useState('')
     const [inputPassword, setInputPassword] = useState('')
@@ -34,15 +36,20 @@ export function SignIn() {
             email: inputEmail,
         })
             .then(async (res) => {
+                setInputEmail('')
+                setInputPassword('')
+                setIsLoading(true)
                 await AsyncStorage.setItem('@token', res.data.token)
 
                 setTimeout(() => {
+                    setIsLoading(false)
                     navigation.navigate('TGL')
-                }, 2000)
+                }, 3000)
             })
             .catch(async (err) => {
+                setIsLoading(false)
                 displayAlert()
-                await AsyncStorage.setItem('@token', '')
+                await AsyncStorage.clear()
             })
     }
 
@@ -67,37 +74,43 @@ export function SignIn() {
     }, [])
 
     return (
-        <View style={styles.container}>
-            <AuthHeader />
-            <AuthTitle title={"Authentication"} />
-            <AuthForm>
-                <InputAuthForm onChangeText={setInputEmail} title="Email" />
-                <InputAuthForm secureTextEntry={true} onChangeText={setInputPassword} title="Password" />
-                <Text
-                    onPress={handleReset}
-                    style={styles.forgotPasswordText}>
-                    I forgot my password
-                </Text>
-                <AuthButtons
-                    onPress={handleLogin}
-                    color={theme.colors.secondary10}
-                    title="Log In"
-                />
-            </AuthForm>
+        <>
+            {!isLoading &&
+                <View style={styles.container}>
+                    <AuthHeader />
+                    <AuthTitle title={"Authentication"} />
+                    <AuthForm>
+                        <InputAuthForm onChangeText={setInputEmail} title="Email" />
+                        <InputAuthForm secureTextEntry={true} onChangeText={setInputPassword} title="Password" />
+                        <Text
+                            onPress={handleReset}
+                            style={styles.forgotPasswordText}>
+                            I forgot my password
+                        </Text>
+                        <AuthButtons
+                            onPress={handleLogin}
+                            color={theme.colors.secondary10}
+                            title="Log In"
+                        />
+                    </AuthForm>
 
-            <AuthButtons
-                onPress={handleSignUp}
-                isOutside={true}
-                color={theme.colors.secondary20}
-                title="Sign Up"
-            />
-            <Modal
-                title="Error :("
-                color={'red'}
-                showAlert={showAlert}
-                callback={hideAlert}
-                message="email or password are wrong"
-            />
-        </View>
+                    <AuthButtons
+                        onPress={handleSignUp}
+                        isOutside={true}
+                        color={theme.colors.secondary20}
+                        title="Sign Up"
+                    />
+                    <Modal
+                        title="Error :("
+                        color={'red'}
+                        showAlert={showAlert}
+                        callback={hideAlert}
+                        message="email or password are wrong"
+                    />
+                </View>}
+            {isLoading &&
+                <LoadingPage />
+            }
+        </>
     )
 }

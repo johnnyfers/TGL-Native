@@ -29,7 +29,7 @@ export default function BetsHeader({ isNewBet }: Props) {
     const dispatch = useDispatch()
 
     async function logoutHandler() {
-        await AsyncStorage.removeItem('@token')
+        await AsyncStorage.clear()
         navigation.navigate('SignIn')
     }
 
