@@ -57,7 +57,7 @@ export function NewBet() {
             .then((res) => {
                 setItems(res.data)
             })
-            .catch(err => console.log(err.message))
+            .catch(err => err)
     }, [])
 
     function gameHandler(index: number) {

@@ -31,5 +31,11 @@ export const styles = StyleSheet.create({
         top: 19,
         right: 19,
         fontFamily: theme.fonts.title700
+    },
+    navButtons: {
+        marginHorizontal: 5,
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: theme.colors.secondary10
     }
 })

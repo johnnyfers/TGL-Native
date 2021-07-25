@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { View, Text, ScrollView } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons';
 
 import BetsHeader from '../../components/BetsHeader'
 import { styles } from './style'
@@ -8,10 +9,13 @@ import { ItemTypes } from '../../interfaces/ItemTypes'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { SelectGameButton } from '../../components/SelectGameButton'
 import { GameCard } from '../../components/GameCard'
+import { RectButton } from 'react-native-gesture-handler'
+import { theme } from '../../global/theme';
 
 export function Games() {
     const [gamesSelected, setGamesSelected] = useState([10])
 
+    const [page, setPage] = useState(1)
     const [items, setItems] = useState([])
     const [games, setGames] = useState([])
     const [gamesFiltered, setGamesFiltered] = useState([])
@@ -30,19 +34,38 @@ export function Games() {
         setToken(user!)
     }
 
-    function filterGamesHandler(id: number, games: {}[]) {
+    function nextPage() {
+        setGamesFiltered([])
+        setPage((page) => page + 1)
+        gamesSelected.map((num: number) => {
+            filterGamesHandler(num, page)
+        })
+    }
 
+    function prevPage() {
+
+        if (page !== 1) {
+            setGamesFiltered([])
+            setPage((page) => page - 1)
+
+            gamesSelected.map((num: number) => {
+                filterGamesHandler(num, page)
+            })
+        }
+    }
+
+    function filterGamesHandler(id: number, page: number) {
         if (gamesSelected.indexOf(id) === -1) {
             setGamesSelected((prev) => prev.concat(id))
 
             axios
-                .get(`http://192.168.0.104:8000/filter?id=${id}`,
+                .get(`http://192.168.0.104:8000/filter?id=${id}&page=${page}`,
                     config
                 )
                 .then(res => {
                     setGamesFiltered(prev => prev.concat(res.data.data))
                 })
-                .catch(err => console.log(err.message))
+                .catch(err => err.message)
             return
         }
 
@@ -51,23 +74,22 @@ export function Games() {
     }
 
     useEffect(() => {
-        //setGamesSelected([])
         getDate()
         axios
             .get('http://192.168.0.104:8000/games')
             .then((res) => {
                 setItems(res.data)
             })
-            .catch(err => console.log(err.message))
+            .catch(err => err.message)
 
         axios
-            .get('http://192.168.0.104:8000/bets?page=1&listNumber=12',
+            .get(`http://192.168.0.104:8000/bets?page=${page}&listNumber=12`,
                 config
             )
             .then(res => {
                 setGames(res.data.data)
             })
-            .catch(err => console.log(err.message))
+            .catch(err => err)
     }, [items])
 
     return (
@@ -76,12 +98,22 @@ export function Games() {
             <Text style={styles.title}>
                 RECENT GAMES
             </Text>
-            <Text style={styles.subtitle}>Filters</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={styles.subtitle}>Filters</Text>
+                <View style={{ flexDirection: 'row' }}>
+                    <RectButton onPress={prevPage} style={styles.navButtons}>
+                        <MaterialIcons name="navigate-before" size={34} color={theme.colors.secondary10} />
+                    </RectButton>
+                    <RectButton onPress={nextPage} style={styles.navButtons}>
+                        <MaterialIcons name="navigate-next" size={34} color={theme.colors.secondary10} />
+                    </RectButton>
+                </View>
+            </View>
 
             <View style={styles.buttonsContainer}>
                 {items && items.map((item: ItemTypes, index: number) =>
                     <SelectGameButton
-                        onPress={(): void => filterGamesHandler(item.id, games)}
+                        onPress={(): void => filterGamesHandler(item.id, page)}
                         selectbackground={(gamesSelected.find((id) => id === item.id) ? item.color : '#fff')}
                         selectcolor={(gamesSelected.find((id) => id === item.id) ? '#fff' : item.color)}
                         key={index}

@@ -32,6 +32,15 @@ const goUp = {
     },
 };
 
+const opacityHandler = {
+    0: {
+        opacity: 0.3
+    },
+    1: {
+        opacity:1
+    }
+}
+
 export function SignIn() {
     const navigation = useNavigation()
 
@@ -95,7 +104,10 @@ export function SignIn() {
         <>
 
             {!isLoading &&
-                <View style={styles.container}>
+                <Animatable.View 
+                animation={opacityHandler}
+                duration={4000}
+                style={styles.container}>
                     <AuthHeader />
                     <AuthTitle title={"Authentication"} />
                     <AuthForm>
@@ -127,7 +139,7 @@ export function SignIn() {
                         message="email or password are wrong"
                     />
 
-                </View>
+                </Animatable.View>
             }
             {isLoading &&
                 <LoadingPage />
