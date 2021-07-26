@@ -14,6 +14,7 @@ type Props = RectButtonProps & {
 export function AuthButtons({ title, color, isOutside, ...rest }: Props) {
     return (
         <RectButton
+            activeOpacity={0}
             style={styles.container}
             {...rest}
         >

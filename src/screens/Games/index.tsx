@@ -15,6 +15,7 @@ import { theme } from '../../global/theme';
 export function Games() {
     const [gamesSelected, setGamesSelected] = useState([10])
 
+    const [lastPage, setLastPage] = useState()
     const [page, setPage] = useState(1)
     const [items, setItems] = useState([])
     const [games, setGames] = useState([])
@@ -35,22 +36,16 @@ export function Games() {
     }
 
     function nextPage() {
-        setGamesFiltered([])
-        setPage((page) => page + 1)
-        gamesSelected.map((num: number) => {
-            filterGamesHandler(num, page)
-        })
+        if (page !== lastPage) {
+            setGamesFiltered([])
+            setPage((page) => page + 1)
+        }
     }
 
     function prevPage() {
-
         if (page !== 1) {
             setGamesFiltered([])
             setPage((page) => page - 1)
-
-            gamesSelected.map((num: number) => {
-                filterGamesHandler(num, page)
-            })
         }
     }
 
@@ -59,11 +54,13 @@ export function Games() {
             setGamesSelected((prev) => prev.concat(id))
 
             axios
-                .get(`http://192.168.0.104:8000/filter?id=${id}&page=${page}`,
+                .get(`http://192.168.0.104:8000/bets?page=${page}&listNumber=12`,
                     config
                 )
                 .then(res => {
-                    setGamesFiltered(prev => prev.concat(res.data.data))
+                    setGamesFiltered(prev => prev.concat(
+                        res.data.data.filter((games: any) => games.games.id === id))
+                    )
                 })
                 .catch(err => err.message)
             return
@@ -87,6 +84,7 @@ export function Games() {
                 config
             )
             .then(res => {
+                setLastPage(res.data.meta.last_page)
                 setGames(res.data.data)
             })
             .catch(err => err)
@@ -101,12 +99,17 @@ export function Games() {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={styles.subtitle}>Filters</Text>
                 <View style={{ flexDirection: 'row' }}>
-                    <RectButton onPress={prevPage} style={styles.navButtons}>
+                    <RectButton
+                        onPress={prevPage}
+                        style={styles.navButtons}>
                         <MaterialIcons name="navigate-before" size={34} color={theme.colors.secondary10} />
                     </RectButton>
-                    <RectButton onPress={nextPage} style={styles.navButtons}>
+                    <RectButton
+                        onPress={(): void => nextPage()}
+                        style={styles.navButtons}>
                         <MaterialIcons name="navigate-next" size={34} color={theme.colors.secondary10} />
                     </RectButton>
+                    <Text style={{ ...styles.subtitle, alignSelf: 'center' }}>{page} / {lastPage}</Text>
                 </View>
             </View>
 

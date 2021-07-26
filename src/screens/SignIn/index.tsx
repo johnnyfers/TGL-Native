@@ -2,7 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { View, Text, Image } from 'react-native'
+import { Ionicons } from '@expo/vector-icons';
+import { View, Text } from 'react-native'
 import * as Animatable from 'react-native-animatable';
 
 import { AuthButtons } from '../../components/AuthButtons'
@@ -14,6 +15,7 @@ import { InputAuthForm } from '../../components/InputAuthForm'
 import { theme } from '../../global/theme'
 import { styles } from './styles'
 import { LoadingPage } from '../../components/LoadingPage'
+import { RectButton } from 'react-native-gesture-handler'
 
 const goUp = {
     0: {
@@ -22,8 +24,8 @@ const goUp = {
     0.5: {
         bottom: 150,
     },
-    0.6:{},
-    0.7:{},
+    0.6: {},
+    0.7: {},
     0.75: {
         bottom: 750,
     },
@@ -37,13 +39,14 @@ const opacityHandler = {
         opacity: 0.3
     },
     1: {
-        opacity:1
+        opacity: 1
     }
 }
 
 export function SignIn() {
     const navigation = useNavigation()
 
+    const [passwordInvisivle, setPasswordInvisivle] = useState(true)
     const [isLoading, setIsLoading] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
     const [inputEmail, setInputEmail] = useState('')
@@ -80,11 +83,15 @@ export function SignIn() {
             })
     }
 
-    const displayAlert = () => {
+    function handleEye() {
+        setPasswordInvisivle((prev) => !prev)
+    }
+
+    function displayAlert() {
         setShowAlert(true)
     };
 
-    const hideAlert = () => {
+    function hideAlert() {
         setShowAlert(false)
     };
 
@@ -104,15 +111,20 @@ export function SignIn() {
         <>
 
             {!isLoading &&
-                <Animatable.View 
-                animation={opacityHandler}
-                duration={4000}
-                style={styles.container}>
+                <Animatable.View
+                    animation={opacityHandler}
+                    duration={4000}
+                    style={styles.container}>
                     <AuthHeader />
                     <AuthTitle title={"Authentication"} />
                     <AuthForm>
-                        <InputAuthForm onChangeText={setInputEmail} title="Email" />
-                        <InputAuthForm secureTextEntry={true} onChangeText={setInputPassword} title="Password" />
+                        <InputAuthForm
+                            onChangeText={setInputEmail}
+                            title="Email" />
+                        <InputAuthForm
+                            secureTextEntry={passwordInvisivle}
+                            onChangeText={setInputPassword}
+                            title="Password" />
                         <Text
                             onPress={handleReset}
                             style={styles.forgotPasswordText}>
@@ -123,6 +135,15 @@ export function SignIn() {
                             color={theme.colors.secondary10}
                             title="Log In"
                         />
+                        <RectButton
+                            onPress={handleEye}
+                            style={styles.eye}
+                            activeOpacity={0}>
+                            <Ionicons
+                                name={passwordInvisivle ? 'eye-outline' : 'eye-off-outline'}
+                                size={24}
+                                color={theme.colors.secondary30} />
+                        </RectButton>
                     </AuthForm>
 
                     <AuthButtons

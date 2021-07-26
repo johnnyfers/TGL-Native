@@ -19,5 +19,11 @@ export const styles = StyleSheet.create({
         alignSelf: 'center',
         width: '100%',
         height: 500,
+    },
+    eye: {
+        padding: 20,
+        position: 'absolute',
+        right: 10,
+        top: 70
     }
 })
